@@ -35,6 +35,13 @@ class MuseumTest < Minitest::Test
 
     assert_equal [@gems_and_minerals, @dead_sea_scrolls, @imax], @dmns.exhibits
   end
+
+  def test_it_can_recommend_intrests
+    recommendations1 = @dmns.recommend_exhibits(@patron_1)
+    recommendations2 = @dmns.recommend_exhibits(@patron_2)
+    assert_equal [@gems_and_minerals, @dead_sea_scrolls], recommendations1
+    assert_equal [@imax], recommendations2
+  end
 end
 
 # pry(main)> patron_1 = Patron.new("Bob", 20)
@@ -54,12 +61,3 @@ end
 #
 # pry(main)> dmns.recommend_exhibits(patron_2)
 # # => [#<Exhibit:0x00007fb400acc590...>]
-
-
-
-# def test_it_can_recommend_intrests
-#   recommendations1 = @dmns.recommend_exhibits(@patron_1)
-#   recommendations2 = @dmns.recommend_exhibits(@patron_2)
-#   assert_equal [@gems_and_minerals, @dead_sea_scrolls], recommendations1
-#   assert_equal [@imax], recommendations2
-# end
