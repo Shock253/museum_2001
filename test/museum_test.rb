@@ -1,5 +1,6 @@
 require "minitest/autorun"
 require "minitest/pride"
+require "mocha/minitest"
 require './lib/museum'
 require './lib/patron'
 require './lib/exhibit'
@@ -123,11 +124,36 @@ class MuseumTest < Minitest::Test
 
     assert_equal expected_lottery_contestants, actual_lottery_contestants
   end
-end
 
-# pry(main)> dmns.ticket_lottery_contestants(dead_sea_scrolls)
-# # => [#<Patron:0x00007fb2011455b8...>, #<Patron:0x6666fb20114megan...>]
-#
+  def test_can_draw_lottery_winner
+    @dmns.add_exhibit(@gems_and_minerals)
+    @dmns.add_exhibit(@dead_sea_scrolls)
+    @dmns.add_exhibit(@imax)
+
+    patron_1 = Patron.new("Bob", 0)
+    patron_1.add_interest("Gems and Minerals")
+    patron_1.add_interest("Dead Sea Scrolls")
+    patron_2 = Patron.new("Sally", 20)
+    patron_2.add_interest("Dead Sea Scrolls")
+    patron_3 = Patron.new("Johnny", 5)
+    patron_3.add_interest("Dead Sea Scrolls")
+
+    @dmns.admit(patron_1)
+    @dmns.admit(patron_2)
+    @dmns.admit(patron_3)
+
+    expected_winner1 = "Johnny"
+    Random.stubs(:rand).returns(1)
+    assert_equal expected_winner1, @dmns.draw_lottery_winner(@dead_sea_scrolls)
+
+    expected_winner1 = "Bob"
+    Random.stubs(:rand).returns(0)
+    assert_equal expected_winner1, @dmns.draw_lottery_winner(@dead_sea_scrolls)
+
+    assert_nil @dmns.draw_lottery_winner(@gems_and_minerals)
+
+  end
+end
 # pry(main)> dmns.draw_lottery_winner(dead_sea_scrolls)
 # # => "Johnny" or "Bob" can be returned here. Fun!
 #
