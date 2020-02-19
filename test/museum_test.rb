@@ -117,9 +117,9 @@ class MuseumTest < Minitest::Test
 
     expected_lottery_contestants = [
       patron_1,
-      patron_2
+      patron_3
     ]
-    actual_lottery_contestants = @dmns.ticket_lottery_contestants(dead_sea_scrolls)
+    actual_lottery_contestants = @dmns.ticket_lottery_contestants(@dead_sea_scrolls)
 
     assert_equal expected_lottery_contestants, actual_lottery_contestants
   end
