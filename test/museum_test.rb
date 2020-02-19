@@ -71,45 +71,35 @@ class MuseumTest < Minitest::Test
 
     assert_equal [patron_1, patron_2, patron_3], @dmns.patrons
   end
+
+  def test_gets_patrons_by_exhibit_interest
+    @dmns.add_exhibit(@gems_and_minerals)
+    @dmns.add_exhibit(@dead_sea_scrolls)
+    @dmns.add_exhibit(@imax)
+
+    patron_1 = Patron.new("Bob", 0)
+    patron_1.add_interest("Gems and Minerals")
+    patron_1.add_interest("Dead Sea Scrolls")
+    patron_2 = Patron.new("Sally", 20)
+    patron_2.add_interest("Dead Sea Scrolls")
+    patron_3 = Patron.new("Johnny", 5)
+    patron_3.add_interest("Dead Sea Scrolls")
+
+    @dmns.admit(patron_1)
+    @dmns.admit(patron_2)
+    @dmns.admit(patron_3)
+
+    expected_patrons_by_exhibit_interest = {
+      @gems_and_minerals => [patron_1],
+      @dead_sea_scrolls => [patron_1, patron_2, patron_3],
+      @imax => []
+    }
+
+    assert_equal expected_patrons_by_exhibit_interest, @dmns.patrons_by_exhibit_interest
+
+  end
 end
 
-# pry(main)> dmns.add_exhibit(gems_and_minerals)
-#
-# pry(main)> dmns.add_exhibit(dead_sea_scrolls)
-#
-# pry(main)> dmns.add_exhibit(imax)
-#
-# pry(main)> dmns.patrons
-# # => []
-#
-# pry(main)> patron_1 = Patron.new("Bob", 0)
-# # => #<Patron:0x00007fb2011455b8...>
-#
-# pry(main)> patron_1.add_interest("Gems and Minerals")
-#
-# pry(main)> patron_1.add_interest("Dead Sea Scrolls")
-#
-# pry(main)> patron_2 = Patron.new("Sally", 20)
-# # => #<Patron:0x00007fb20227f8b0...>
-#
-# pry(main)> patron_2.add_interest("Dead Sea Scrolls")
-#
-# pry(main)> patron_3 = Patron.new("Johnny", 5)
-# # => #<Patron:0x6666fb20114megan...>
-#
-# pry(main)> patron_3.add_interest("Dead Sea Scrolls")
-#
-# pry(main)> dmns.admit(patron_1)
-#
-# pry(main)> dmns.admit(patron_2)
-#
-# pry(main)> dmns.admit(patron_3)
-#
-# pry(main)> dmns.patrons
-# # => [#<Patron:0x00007fb2011455b8...>, #<Patron:0x00007fb20227f8b0...>, #<Patron:0x6666fb20114megan...>]
-#
-# #Patrons are added even if they don't have enough money for all/any exhibits.
-#
 # pry(main)> dmns.patrons_by_exhibit_interest
 # # =>
 # # {
