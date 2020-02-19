@@ -23,4 +23,19 @@ class Museum
     @patrons << patron
   end
 
+  def patrons_by_exhibit_interest
+    @exhibits.reduce({}) do |patrons_by_interest, exhibit|
+      if !patrons_by_interest.has_key?(exhibit)
+        patrons_by_interest[exhibit] = []
+      end
+
+      @patrons.each do |patron|
+        if recommend_exhibits(patron).include?(exhibit)
+          patrons_by_interest[exhibit] << patron
+        end
+      end
+      
+      patrons_by_interest
+    end
+  end
 end
